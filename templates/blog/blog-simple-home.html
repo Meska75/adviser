@@ -21,59 +21,12 @@
             <li class="current">Blog</li>
           </ol>
         </div>
-        {% include 'blog/blog-search.html' %}
       </nav>
     </div><!-- End Page Title -->
-
-    <!-- Latest Post & Popular Tags Section -->
-    <section id="latest-post-section" class="latest-post-section section">
-      <div class="container">
-        <div class="row">
-          <!-- Left Column - Latest Post -->
-          <div class="col-lg-8">
-
-            <div class="latest-post d-flex flex-column flex-md-row align-items-start gap-3" data-aos="fade-up">
-              <div class="post-img" style="flex: 0 0 45%; overflow:hidden; border-radius:8px;">
-                  <img src="{{ latest_post.image.url }}" alt="{{ latest_post.title }}" class="img-fluid"
-                      style="width:100%; height:320px; object-fit:cover; display:block;">
-              </div>
-
-              <div class="post-content" style="flex:1;">
-                <div class="post-meta mb-2">
-                  <span class="author"><i class="bi bi-person"></i> {{ latest_post.author }}</span>
-                  <span class="date ms-3"><i class="bi bi-calendar"></i> {{ latest_post.published_date|date:"Y-M-j" }}</span>
-                </div>
-
-                <h2 class="title h4 mb-2">
-                  <a href="{% url 'blog:blogsingle' pid=latest_post.id %}">{{ latest_post.title }}</a>
-                </h2>
-                <p class="excerpt mb-3">
-                  {{ latest_post.content|striptags|truncatewords:60 }}
-                </p>
-                <a href="{% url 'blog:blogsingle' pid=latest_post.id %}" class="btn btn-sm btn-outline-primary">Read More <i class="bi bi-arrow-left"></i></a>
-              </div>
-            </div>
-          </div>
-
-          <!-- Right Column - Popular Tags -->
-          <div class="col-lg-4">
-            <div class="popular-tags" data-aos="fade-up" data-aos-delay="100">
-              <div class="widget-title mb-3">
-                {% post_categories %}
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
 
     <!-- Blog Posts Section -->
     <section id="blog-posts" class="blog-posts section">
     <div class="container">
-      <div class="section-title" data-aos="fade-up">
-        <h2>Recent Posts</h2>
-        <p>Check out our latest blog posts</p>
-      </div>
       
       <div class="row gy-4">
         {% if posts %}

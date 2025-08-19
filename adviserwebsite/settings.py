@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'multi_captcha_admin',    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,6 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'web.apps.WebConfig',
     'blog.apps.BlogConfig',
+    'taggit',
+    'django_summernote',
+    'captcha',
 ]
 
 MIDDLEWARE = [
@@ -100,6 +104,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+#captcha admin setting
+MULTI_CAPTCHA_ADMIN = {
+    'engine': 'simple-captcha',
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/

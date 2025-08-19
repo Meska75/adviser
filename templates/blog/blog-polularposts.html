@@ -1,0 +1,19 @@
+{% load blog-tags %}
+
+<!-- Recent Posts Widget -->
+            <div class="recent-posts-widget widget-item">
+
+              <h3 class="widget-title">PopularPosts</h3>
+            {% for post in popularposts %}
+              <div class="post-item">
+                <img src="{{ post.image.url }}" alt="{{ post.title }}" class="img-fluid"
+                      style="width:40%; height:100px; object-fit:cover; display:block;">
+                <div>
+                  <h4><a href="{% url 'blog:blogsingle' pid=post.id %}">{{ post.title }}</a></h4>
+                  <time datetime="2020-01-01">{{ post.published_date|date:"Y-M-j" }}</time>
+                  <span>views: {{ post.counted_view }}</span>
+                </div>
+              </div><!-- End recent post item-->
+              {% endfor %}
+
+            </div><!--/Recent Posts Widget -->

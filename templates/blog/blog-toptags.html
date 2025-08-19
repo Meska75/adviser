@@ -1,0 +1,19 @@
+{% load blog-tags %}
+<!-- Tags Widget -->
+            <div class="tags-widget widget-item">
+
+              <h3 class="widget-title">Top Tags</h3>
+              {% if tags %}
+              <ul>
+                {% for tag, count in tags.items %}
+                <li>
+                <a href="{% url 'blog:tag' tag_name=tag.slug %}">
+                    {{ tag.name }} <span>{{ count }}</span>
+                </a>
+                </li>
+                {% endfor %}
+              </ul>
+                {% else %}
+                    <p>No tags found.</p>
+                {% endif %}
+            </div><!--/Tags Widget -->
