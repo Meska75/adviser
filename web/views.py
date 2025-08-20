@@ -1,7 +1,7 @@
 from django.shortcuts import render , redirect
 from web.forms import ContactForm
 from django.contrib import messages
-
+from .forms import ContactForm
 
 # Create your views here.
 
@@ -14,20 +14,16 @@ def service_view(request):
 def about_view(request):
     return render(request , 'website/about.html')
 
-from django.contrib import messages
-from django.shortcuts import render
-from .forms import ContactForm
 
 def contact_view(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
-            edied_form = form.save(commit=False)
-            edied_form.save()
-            messages.success(request, "your message sended successfully")
-            form = ContactForm()  # فرم خالی بعد از ذخیره
+            form.save()
+            messages.success(request, "Your message successfully sended!")
+            return redirect('web:contact')
         else:
-            messages.error(request, "your message failded!")
+            messages.error(request, "somthing is wrong, check fields and try again.")
     else:
         form = ContactForm()
     return render(request, 'website/contact.html', {'form': form})

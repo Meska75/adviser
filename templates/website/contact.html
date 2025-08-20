@@ -3,25 +3,31 @@
 {% block content %}
 
 <main class="main">
-  <!-- Page Title -->
-  <div class="page-title light-background">
-    <div class="container">
-      <h1>Contact</h1>
+    <!-- Page Title -->
+    <div class="page-title" data-aos="fade">
+      <div class="heading">
+        <div class="container">
+          <div class="row d-flex justify-content-center text-center">
+            <div class="col-lg-8">
+              <h1>Contact</h1>
+              <p class="mb-0">Contact with us</p>
+            </div>
+          </div>
+        </div>
+      </div>
       <nav class="breadcrumbs">
-        <ol>
-          <li><a href="/">Home</a></li>
-          <li class="current">Contact</li>
-        </ol>
+        <div class="container">
+          <ol>
+            <li><a href="/">Home</a></li>
+            <li class="current">Contact</li>
+          </ol>
+        </div>
       </nav>
-    </div>
-  </div><!-- End Page Title -->
+    </div><!-- End Page Title -->
 
   <!-- Contact Section -->
   <section id="contact" class="contact section">
     <div class="container section-title" data-aos="fade-up">
-      <h2>Contact</h2>
-      <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
-    </div>
     <div class="container" data-aos="fade-up" data-aos-delay="100">
       <div class="row gy-4">
         <div class="col-lg-6">
@@ -61,7 +67,6 @@
           </div>
         </div>
         <div class="col-lg-6">
-
           <form class="form-area contact-form text-right"
                 action="{% url 'web:contact' %}" method="post">
             {% csrf_token %}
@@ -81,9 +86,12 @@
               </div>
 
               <div class="col-lg-6 form-group">
+                <!-- ✅ کادر پیام بزرگتر شده -->
                 <textarea class="common-textarea form-control"
                           name="message"
                           placeholder="Enter Message"
+                          rows="8"
+                          style="min-height: 200px; resize: vertical;"
                           required></textarea>
               </div>
 
@@ -101,33 +109,44 @@
   </section>
 </main>
 
-
-<!-- ✅ Bootstrap Modal برای نمایش پیام‌ها -->
-<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header {% if messages and messages.0.tags == 'success' %}bg-success text-white{% else %}bg-danger text-white{% endif %}">
-        <h5 class="modal-title" id="messageModalLabel">
-          {% if messages and messages.0.tags == 'success' %}
-            Success
-          {% else %}
-            Error
-          {% endif %}
-        </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        {% for message in messages %}
-          <p>{{ message }}</p>
-        {% endfor %}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+<!-- ✅ Modal تصحیح شده برای نمایش پیام‌ها -->
+{% if messages %}
+  {% for message in messages %}
+    <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <!-- ✅ تصحیح کلاس‌های header بر اساس نوع پیام -->
+          <div class="modal-header {% if message.tags == 'success' %}bg-success text-white{% elif message.tags == 'error' %}bg-danger text-white{% else %}bg-info text-white{% endif %}">
+            <h5 class="modal-title" id="messageModalLabel">
+              {% if message.tags == 'success' %}
+                <i class="bi bi-check-circle me-2"></i>Success
+              {% elif message.tags == 'error' %}
+                <i class="bi bi-exclamation-triangle me-2"></i>Error
+              {% else %}
+                <i class="bi bi-info-circle me-2"></i>Information
+              {% endif %}
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p class="mb-0">{{ message }}</p>
+          </div>
+          <div class="modal-footer">
+            {% if message.tags == 'success' %}
+              <button type="button" class="btn btn-success" data-bs-dismiss="modal">
+                <i class="bi bi-check me-1"></i>OK
+              </button>
+            {% else %}
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <i class="bi bi-x me-1"></i>Close
+              </button>
+            {% endif %}
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
-
+  {% endfor %}
+{% endif %}
 
 <!-- Scroll Top -->
 <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center">
@@ -148,12 +167,23 @@
 <script src="{% static 'vendor/swiper/swiper-bundle.min.js' %}"></script>
 <script src="{% static 'js/main.js' %}"></script>
 
-<!-- ✅ Script برای نمایش خودکار Modal وقتی پیام وجود دارد -->
+<!-- ✅ Script تصحیح شده برای نمایش Modal -->
 {% if messages %}
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    var myModal = new bootstrap.Modal(document.getElementById('messageModal'));
-    myModal.show();
+    const messageModal = document.getElementById('messageModal');
+    if (messageModal) {
+      const myModal = new bootstrap.Modal(messageModal);
+      myModal.show();
+      
+      // بستن خودکار پیام موفقیت بعد از 3 ثانیه
+      const messageType = '{{ messages.0.tags }}';
+      if (messageType === 'success') {
+        setTimeout(function() {
+          myModal.hide();
+        }, 3000);
+      }
+    }
   });
 </script>
 {% endif %}
