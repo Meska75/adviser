@@ -10,3 +10,5 @@ urlpatterns = [
     path('about', about_view , name = 'about'),
     path('policy', policy_view , name = 'policy'),
 ]
+
+handler404 = "myapp.views.custom_404"

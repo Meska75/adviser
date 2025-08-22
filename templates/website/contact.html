@@ -109,45 +109,6 @@
   </section>
 </main>
 
-<!-- ✅ Modal تصحیح شده برای نمایش پیام‌ها -->
-{% if messages %}
-  {% for message in messages %}
-    <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <!-- ✅ تصحیح کلاس‌های header بر اساس نوع پیام -->
-          <div class="modal-header {% if message.tags == 'success' %}bg-success text-white{% elif message.tags == 'error' %}bg-danger text-white{% else %}bg-info text-white{% endif %}">
-            <h5 class="modal-title" id="messageModalLabel">
-              {% if message.tags == 'success' %}
-                <i class="bi bi-check-circle me-2"></i>Success
-              {% elif message.tags == 'error' %}
-                <i class="bi bi-exclamation-triangle me-2"></i>Error
-              {% else %}
-                <i class="bi bi-info-circle me-2"></i>Information
-              {% endif %}
-            </h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <p class="mb-0">{{ message }}</p>
-          </div>
-          <div class="modal-footer">
-            {% if message.tags == 'success' %}
-              <button type="button" class="btn btn-success" data-bs-dismiss="modal">
-                <i class="bi bi-check me-1"></i>OK
-              </button>
-            {% else %}
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                <i class="bi bi-x me-1"></i>Close
-              </button>
-            {% endif %}
-          </div>
-        </div>
-      </div>
-    </div>
-  {% endfor %}
-{% endif %}
-
 <!-- Scroll Top -->
 <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center">
   <i class="bi bi-arrow-up-short"></i>
@@ -167,25 +128,6 @@
 <script src="{% static 'vendor/swiper/swiper-bundle.min.js' %}"></script>
 <script src="{% static 'js/main.js' %}"></script>
 
-<!-- ✅ Script تصحیح شده برای نمایش Modal -->
-{% if messages %}
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const messageModal = document.getElementById('messageModal');
-    if (messageModal) {
-      const myModal = new bootstrap.Modal(messageModal);
-      myModal.show();
-      
-      // بستن خودکار پیام موفقیت بعد از 3 ثانیه
-      const messageType = '{{ messages.0.tags }}';
-      if (messageType === 'success') {
-        setTimeout(function() {
-          myModal.hide();
-        }, 3000);
-      }
-    }
-  });
-</script>
-{% endif %}
+
 
 {% endblock %}

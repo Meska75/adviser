@@ -1,4 +1,4 @@
-{% load blog-tags %}
+{% load blog-tags humanize %}
 
 <!-- Recent Posts Widget -->
             <div class="recent-posts-widget widget-item">
@@ -10,7 +10,7 @@
                       style="width:40%; height:100px; object-fit:cover; display:block;">
                 <div>
                   <h4><a href="{% url 'blog:blogsingle' pid=post.id %}">{{ post.title }}</a></h4>
-                  <time datetime="2020-01-01">{{ post.published_date|date:"Y-M-j" }}</time>
+                  <time datetime="2020-01-01">{{ post.published_date|naturaltime }}</time>
                   <span>views: {{ post.counted_view }}</span>
                 </div>
               </div><!-- End recent post item-->

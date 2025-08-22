@@ -18,6 +18,19 @@ from django.contrib import admin
 from django.urls import path , include
 from django.conf import settings
 from django.conf.urls.static import static
+from web.sitemap import StaticViewSitemap
+from blog.sitemap import BlogSitemap
+from django.contrib.sitemaps.views import sitemap
+import debug_toolbar
+from blog.feeds import LatestEntriesFeed
+from django.contrib.auth import views as auth_views
+from accounts.forms import CustomPasswordResetForm
+
+
+sitemaps = {
+    "static": StaticViewSitemap,
+    "blog" : BlogSitemap
+}
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,7 +38,60 @@ urlpatterns = [
     path('blog/', include('blog.urls')),
     path('summernote/', include('django_summernote.urls')),
     path('captcha/', include('captcha.urls')),
+    path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="sitemap"),
+    path('robots.txt', include('robots.urls')),
+    path('__debug__/', include(debug_toolbar.urls)),
+    path("rss/", LatestEntriesFeed(), name='rss-feed'),
+    path('accounts/',include('accounts.urls')),
+    path('aiadviser/',include('AIadviser.urls')),
+
+    #forgot password paths
+    path(
+        "password_change/",
+        auth_views.PasswordChangeView.as_view(
+            template_name='accounts\password_change_form.html'
+            ),
+        name="password_change"
+    ),
+
+    path("password_reset/",
+        auth_views.PasswordResetView.as_view(
+            template_name='accounts\password_reset.html',
+            form_class=CustomPasswordResetForm,
+            ),
+        name="password_reset"
+        ),
+
+    path(
+        "password_reset/done/",
+        auth_views.PasswordResetDoneView.as_view(
+            template_name='accounts\password_reset_done.html'
+            ),
+        name="password_reset_done",
+    ),
+
+    path(
+        "reset/<uidb64>/<token>/",
+        auth_views.PasswordResetConfirmView.as_view(
+            template_name='accounts\password_reset_confirm.html'     
+        ),
+        name="password_reset_confirm",
+    ),
+    
+    path(
+        "reset/done/",
+        auth_views.PasswordResetCompleteView.as_view(
+            template_name='accounts\password_reset_complete.html'
+        ),
+        name="password_reset_complete",
+    ),
+
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if not settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

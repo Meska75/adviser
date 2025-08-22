@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<main class="main">
+    <!-- Page Title -->
+    <div class="page-title" data-aos="fade">
+      <div class="heading">
+        <div class="container">
+          <div class="row d-flex justify-content-center text-center">
+            <div class="col-lg-8">
+              <h1>AI-adviser</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+      <nav class="breadcrumbs">
+        <div class="container">
+          <ol>
+            <li><a href="/">Home</a></li>
+            <li class="current">AI-adviser</li>
+          </ol>
+        </div>
+      </nav>
+    </div><!-- End Page Title -->
+
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+
+        <section id="ai-feedback" class="section my-4">
+          <div class="card shadow-sm">
+            <div class="card-body">
+
+              <form id="aiFeedbackForm" method="post" action="{% url 'aiadviser:airesult' %}">
+                {% csrf_token %}
+
+                {# Error area (server-side validation messages) #}
+                {% if form_errors %}
+                  <div class="alert alert-danger">{{ form_errors }}</div>
+                {% endif %}
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label for="gender" class="form-label">جنسیت</label>
+                    <select id="gender" name="gender" class="form-select" required>
+                      <option value="">انتخاب کنید...</option>
+                      <option value="male">مرد</option>
+                      <option value="female">زن</option>
+                      <option value="any">فرقی نمیکند</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="education" class="form-label">مقطع تحصیلی</label>
+                    <select id="education" name="education" class="form-select" required>
+                      <option value="">انتخاب کنید...</option>
+                      <option value="diploma">دیپلم</option>
+                      <option value="associate">فوق دیپلم</option>
+                      <option value="bachelor">لیسانس</option>
+                      <option value="master">فوق لیسانس</option>
+                      <option value="phd">دکترا</option>
+                      <option value="medical_doctor">دکتری پزشکی</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="preferred_env" class="form-label">علاقمند به کار در</label>
+                    <select id="preferred_env" name="preferred_env" class="form-select" required>
+                      <option value="">انتخاب کنید...</option>
+                      <option value="quiet">محیط‌های ساکت و آرام</option>
+                      <option value="private">محیط‌های خصوصی مثل مطب یا دفتر</option>
+                      <option value="team">کارهای تعاملی و تیمی</option>
+                      <option value="industrial">محیط‌های صنعتی</option>
+                      <option value="dynamic">محیط‌های غیر ثابت (ماموریت یا تجربه محیط‌های مختلف)</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="social_interaction" class="form-label">از تعامل با آدم‌ها</label>
+                    <select id="social_interaction" name="social_interaction" class="form-select" required>
+                      <option value="">انتخاب کنید...</option>
+                      <option value="enjoy">لذت می‌برم</option>
+                      <option value="avoid">دوری می‌کنم</option>
+                      <option value="moderate">کمی تعامل دوست دارم</option>
+                      <option value="private">کمی سکوت و فضای خصوصی دوست دارم</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="physical_skill" class="form-label">در فعالیت‌های بدنی و کار با ابزار و تسلط بر اندام و انگشت‌ها</label>
+                    <select id="physical_skill" name="physical_skill" class="form-select" required>
+                      <option value="">انتخاب کنید...</option>
+                      <option value="excellent">عالی‌ام</option>
+                      <option value="good">خوبم</option>
+                      <option value="average">متوسط‌ام</option>
+                      <option value="weak">ضعیف‌ام</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="responsibility_pref" class="form-label">ترجیح می‌دهم کارها را</label>
+                    <select id="responsibility_pref" name="responsibility_pref" class="form-select" required>
+                      <option value="">انتخاب کنید...</option>
+                      <option value="directed">معمولاً کسی برایم مشخص کند</option>
+                      <option value="self_managed">خودم با تدبیر خودم مدیریت کنم</option>
+                      <option value="guided">مسئولیت با من باشد ولی راهنمایی شوم</option>
+                      <option value="partial">تنها در موارد جزئی مسئولیت داشته باشم</option>
+                    </select>
+                  </div>
+                </div>
+
+                  <div class="col-12">
+                    <label for="major" class="form-label">رشته تحصیلی من</label>
+                    <input id="major" name="major" type="text" class="form-control" placeholder="مثال: مهندسی نرم‌افزار" value="{{ request.POST.major|default_if_none:'' }}">
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="city" class="form-label">در کدام شهر و شهرستان زندگی می‌کنم</label>
+                    <input id="city" name="city" type="text" class="form-control" placeholder="مثال: تهران، شمیرانات" value="{{ request.POST.city|default_if_none:'' }}">
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="phone" class="form-label">(اختیاری) شماره تماس</label>
+                    <input id="phone" name="phone" type="text" class="form-control" placeholder="اختیاری: جهت تماس" value="{{ request.POST.phone|default_if_none:'' }}">
+                  </div>
+
+                  <div class="col-12">
+                    <label for="concerns" class="form-label">چه نگرانی و دغدغه‌ای دارم (به طور کامل شرح دهید)</label>
+                    <textarea id="concerns" name="concerns" rows="5" class="form-control" placeholder="لطفاً نگرانی‌ها، اهداف، و هر اطلاعاتی که فکر می‌کنید مهم است را بنویسید">{{ request.POST.concerns|default_if_none:'' }}</textarea>
+                  </div>
+
+                  <div class="mt-4 text-center">
+                    <button type="submit" class="btn btn-primary px-4">ارسال</button>
+                  </div>
+
+                </div> <!-- /.row -->
+              </form>
+
+            </div> <!-- /.card-body -->
+          </div> <!-- /.card -->
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+</main>
+<script>
+(function(){
+  const form = document.getElementById('aiFeedbackForm');
+  if (!form) return;
+
+  // پیدا کردن المنت‌ها با fallback امن
+  const submitBtn = document.getElementById('submitBtn') || form.querySelector('button[type="submit"]');
+  const statusEl = document.getElementById('formStatus');
+  const aiCard = document.getElementById('aiResultCard');
+  const aiContent = document.getElementById('aiResultContent');
+
+  form.addEventListener('submit', function(e){
+    // اگر می‌خواهید حتماً AJAX انجام شود، ادامه دهید، در غیر این‌صورت حذف کنید
+    e.preventDefault();
+
+    // محافظت در برابر نبودن دکمه/عناصر
+    try {
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        var originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = 'در حال پردازش...';
+      }
+
+      if (statusEl) statusEl.innerHTML = '';
+
+      const data = new FormData(form);
+
+      fetch(form.action, {
+        method: 'POST',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'Accept': 'application/json'
+        },
+        body: data
+      }).then(async res => {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalText;
+        }
+
+        const contentType = res.headers.get('content-type') || '';
+        if (contentType.indexOf('application/json') !== -1) {
+          const json = await res.json();
+          if (json.answer) {
+            if (aiContent) aiContent.innerHTML = json.answer;
+            if (aiCard) aiCard.classList.remove('d-none');
+            if (aiCard) aiCard.scrollIntoView({behavior:'smooth'});
+            return;
+          }
+          if (json.errors && statusEl) {
+            statusEl.innerHTML = `<div class="alert alert-danger">${json.errors}</div>`;
+            return;
+          }
+        }
+
+        // fallback: سرور HTML برگردانده — نمایش snippet
+        const text = await res.text();
+        if (aiContent) {
+          aiContent.innerHTML = text.substring(0, 2000);
+          if (aiCard) aiCard.classList.remove('d-none');
+          if (aiCard) aiCard.scrollIntoView({behavior:'smooth'});
+        } else {
+          // اگر aiContent نیست، فرم را به صورت معمول ارسال کن (fallback)
+          form.submit();
+        }
+
+      }).catch(err => {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalText;
+        }
+        if (statusEl) statusEl.innerHTML = `<div class="alert alert-danger">خطا در ارتباط با سرور. لطفاً بعداً تلاش کنید.</div>`;
+        console.error(err);
+      });
+
+    } catch (err) {
+      // اگر هر خطای JS پیش آمد، fallback به ارسال معمولی فرم
+      console.error('JS error, fallback to normal submit', err);
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+      }
+      form.submit();
+    }
+  });
+})();
+</script>
+
+{% endblock %}
