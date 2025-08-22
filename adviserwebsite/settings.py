@@ -23,8 +23,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-s$$d@98=b(zig-a)yyt95q8z=ki1+r8*p-q(aj$n1_4z9s#6v3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", "*"]  # در production فقط دامنه خود را بگذارید
+DEBUG =True
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -194,7 +194,7 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = "static"
 
 MEDIA_URL = '/media/'
