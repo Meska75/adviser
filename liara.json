@@ -1,0 +1,15 @@
+{
+  "platform": "python",
+  "build": [
+    "python -m pip install -r requirements.txt"
+  ],
+  "hooks": {
+    "predeploy": [
+      "python manage.py migrate --noinput",
+      "python manage.py collectstatic --noinput"
+    ]
+  },
+  "deploy": {
+    "command": "gunicorn adviserwebsite.wsgi:application --bind 0.0.0.0:$PORT --workers 2"
+  }
+}

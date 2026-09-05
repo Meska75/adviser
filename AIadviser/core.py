@@ -10,7 +10,7 @@ class LiaraLLM:
     """
     def __init__(self, base_url=None, api_key=None, model="openai/gpt-4o-mini", temperature=0.3):
         self.base_url = "https://ai.liara.ir/api/v1/68a1c6d25cf1e1c2c649fb6c"
-        self.api_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI2ODlhZWQ4MjFhYTM5ZDAzY2ZhZWY1NTciLCJ0eXBlIjoiYXV0aCIsImlhdCI6MTc1NTg1MDcyNH0.pOa32MUDEQYRvhvmhR4ffJbKX-thYFn43Zc-0EB1xxI"  # کلیدتون
+        self.api_key = os.environ.get("LIARA_LLM_KEY")
         self.model = model
         self.temperature = temperature
 

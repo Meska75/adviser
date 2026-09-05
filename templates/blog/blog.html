@@ -52,12 +52,18 @@
                 </div>
 
                 <h2 class="title h4 mb-2">
-                  <a href="{% url 'blog:blogsingle' pid=latest_post.id %}">{{ latest_post.title }}</a>
+                  {% if latest_post.id %}
+                    <a href="{% url 'blog:blogsingle' pid=latest_post.id %}">{{ latest_post.title }}</a>
+                  {% else %}
+                    {{ latest_post.title }}
+                  {% endif %}
                 </h2>
                 <p class="excerpt mb-3">
                   {{ latest_post.content|striptags|truncatewords:60 }}
                 </p>
-                <a href="{% url 'blog:blogsingle' pid=latest_post.id %}" class="btn btn-sm btn-outline-primary">Read More <i class="bi bi-arrow-left"></i></a>
+                {% if latest_post.id %}
+                  <a href="{% url 'blog:blogsingle' pid=latest_post.id %}" class="btn btn-sm btn-outline-primary">Read More <i class="bi bi-arrow-left"></i></a>
+                {% endif %}
               </div>
             </div>
           </div>

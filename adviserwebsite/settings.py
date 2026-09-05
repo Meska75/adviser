@@ -11,20 +11,24 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-s$$d@98=b(zig-a)yyt95q8z=ki1+r8*p-q(aj$n1_4z9s#6v3'
-
+SECRET_KEY = os.environ.get("SECRET_KEY", "unsafe-dev-secret")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG =True
+DEBUG = os.environ.get("DEBUG", "False") == "True"
 ALLOWED_HOSTS = ["*"]
+
+SITE_ID=1
+
+# Database
+# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 # Application definition
 
@@ -36,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'postgresql_app',
     'web.apps.WebConfig',
     'blog.apps.BlogConfig',
     'taggit',
@@ -46,7 +51,6 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     "django.contrib.sitemaps",
     'robots',
-    'debug_toolbar',
     'accounts.apps.AccountsConfig',
     'AIadviser.apps.AiadviserConfig',
 ]
@@ -59,8 +63,6 @@ STATICFILES_FINDERS = [
 
 COMPRESS_ENABLED = True
 COMPRESS_OFFLINE = True
-
-SITE_ID = 1
 
 #robots
 ROBOTS_USE_HOST = False
@@ -106,7 +108,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'adviserwebsite.urls'
@@ -127,18 +128,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'adviserwebsite.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -181,13 +170,13 @@ USE_TZ = True
 
 
 # EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'mohammad.eska34@gmail.com'
-EMAIL_HOST_PASSWORD = 'hqbpaskgjitszhwf'
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND", "django.core.mail.backends.smtp.EmailBackend")
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.gmail.com")
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", 587))
+EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "True") == "True"
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -195,10 +184,9 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATIC_URL = '/static/'
-STATIC_ROOT = "static"
-
+STATIC_ROOT =BASE_DIR / "static"
 MEDIA_URL = '/media/'
-MEDIA_ROOT = "media"
+MEDIA_ROOT = BASE_DIR /"media"
 
 STATICFILES_DIRS = [
     BASE_DIR / "statics",
@@ -212,4 +200,33 @@ INTERNAL_IPS = ["127.0.0.1",
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+DATABASES = {
+    
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME':     os.getenv("POSTGRESQL_DB_NAME"), 
+        'USER':     os.getenv("POSTGRESQL_DB_USER"),
+        'PASSWORD': os.getenv("POSTGRESQL_DB_PASS"),
+        'HOST':     os.getenv("POSTGRESQL_DB_HOST"),
+        'PORT':     os.getenv("POSTGRESQL_DB_PORT"),
+    },
+}
+
+
+# فقط وقتی سایت روی HTTPS کامل کار می‌کند اینها را فعال کن
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+# طول مدت HSTS — ابتدا مقدار کمتری برای تست، بعد از مطمئن شدن مقدار را افزایش دهید
+SECURE_HSTS_SECONDS = 3600   # ابتدا تستی: 3600 (یک ساعت) — بعد از اطمینان افزایش بدید
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True  # ابتدا False؛ وقتی مطمئن شدی True کن و ثبت انجام بده
 

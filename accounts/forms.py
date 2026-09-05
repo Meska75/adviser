@@ -3,8 +3,10 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth import get_user_model
+from captcha.fields import CaptchaField
 
 class CustomUserCreationForm(UserCreationForm):
+    captcha = CaptchaField()
     first_name = forms.CharField(max_length=200, required=True, label="First Name")
     last_name = forms.CharField(max_length=200, required=True, label="Last Name")
     email = forms.EmailField(required=True, label="Email Address")
@@ -30,6 +32,7 @@ class CustomUserCreationForm(UserCreationForm):
 # to recognize user email is verified or not
 User = get_user_model()
 class CustomPasswordResetForm(PasswordResetForm):
+    captcha = CaptchaField()
     email = forms.EmailField(
         label="Your Email",
         max_length=254,

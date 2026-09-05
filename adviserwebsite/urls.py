@@ -40,23 +40,23 @@ urlpatterns = [
     path('captcha/', include('captcha.urls')),
     path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="sitemap"),
     path('robots.txt', include('robots.urls')),
-    path('__debug__/', include(debug_toolbar.urls)),
     path("rss/", LatestEntriesFeed(), name='rss-feed'),
     path('accounts/',include('accounts.urls')),
     path('aiadviser/',include('AIadviser.urls')),
+    path('postgresql/', include('postgresql_app.urls')),
 
     #forgot password paths
     path(
         "password_change/",
         auth_views.PasswordChangeView.as_view(
-            template_name='accounts\password_change_form.html'
+            template_name='accounts/password_change_form.html'
             ),
         name="password_change"
     ),
 
     path("password_reset/",
         auth_views.PasswordResetView.as_view(
-            template_name='accounts\password_reset.html',
+            template_name='accounts/password_reset.html',
             form_class=CustomPasswordResetForm,
             ),
         name="password_reset"
@@ -65,7 +65,7 @@ urlpatterns = [
     path(
         "password_reset/done/",
         auth_views.PasswordResetDoneView.as_view(
-            template_name='accounts\password_reset_done.html'
+            template_name='accounts/password_reset_done.html'
             ),
         name="password_reset_done",
     ),
@@ -73,7 +73,7 @@ urlpatterns = [
     path(
         "reset/<uidb64>/<token>/",
         auth_views.PasswordResetConfirmView.as_view(
-            template_name='accounts\password_reset_confirm.html'     
+            template_name='accounts/password_reset_confirm.html'     
         ),
         name="password_reset_confirm",
     ),
@@ -81,7 +81,7 @@ urlpatterns = [
     path(
         "reset/done/",
         auth_views.PasswordResetCompleteView.as_view(
-            template_name='accounts\password_reset_complete.html'
+            template_name='accounts/password_reset_complete.html'
         ),
         name="password_reset_complete",
     ),
@@ -92,5 +92,7 @@ urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 handler404 = 'web.views.custom_404'
+handler500 = 'web.views.custom_500'
+
 
 
